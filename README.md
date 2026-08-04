@@ -4,13 +4,13 @@ An **AI input-safety layer** built with **LangChain**, **Chroma**, and **GPT-4o-
 
 ## 🚀 Overview
 
-This project screens incoming user input through three independent detection layers — regex, vector similarity, and an LLM classifier — before deciding whether to allow or block a request. Detection results can optionally be forwarded to Splunk for monitoring.
+This project screens incoming user input through three independent detection layers regex, vector semantic search with RAG, and an LLM classifier before deciding whether to allow or block a request. The regex identify the fraud phrase from the prompt and block earlier before even pass to the second layer. The second layer run semantic search prompt against the business specific prompt injection/ jailbreak attempt vectore database and detect based on similarity score. The 3rd layer is LLM classifyer which use LLM model as identifyer and classify prompt as Jailbreak or prompt injection. Each layer runs in order and short-circuits as soon as one flags the input as unsafe. If any layer flags the input, returns a block message instead of proceeding to normal processing. Fianlly, all proces send to Splunk in each step for monitoring.
 
 ## ✨ Features
 
 - 🛡️ **Three-layer security guardrail** — regex, vector similarity, and LLM-based injection detection running in sequence on every input
-- 📚 **Dedicated jailbreak vector store** — a Chroma store built from a known injection/jailbreak dataset powers the similarity check
-- 📊 **Splunk logging (optional)** — a ready-to-enable hook forwards blocked-request events with layer, score, and matched document
+- 📚 **Vector store** — a Chroma store built from a known injection/jailbreak dataset powers the similarity check
+- 📊 **Splunk logging** — a ready-to-enable hook forwards blocked-request events with layer, score, and matched document
 - 🖥️ **Gradio UI** — minimal chat-style text interface with optional public shareable link
 
 ## Architecture
@@ -19,7 +19,7 @@ This project screens incoming user input through three independent detection lay
 
 `User Input → Rule-based Regex Check → Vector Similarity Check → LLM Classifier → Allow / Block`
 
-Each layer runs in order and short-circuits as soon as one flags the input as unsafe. The vector similarity layer draws on a Chroma store that is built offline by `Vector_DB.py`, and blocked requests can optionally be forwarded to Splunk.
+ The vector similarity layer draws on a Chroma store that is built offline by `Vector_DB.py`, and blocked requests can optionally be forwarded to Splunk.
 
 ## 🧠 Tech Stack
 
@@ -43,8 +43,6 @@ Each layer runs in order and short-circuits as soon as one flags the input as un
 | `rule_based_check` | Regex match against known injection phrases | Pattern match found |
 | `vector_check` | Embeds input, compares to jailbreak vector store | Similarity score < 0.3 |
 | `llm_check` | GPT-4o-mini classifies input as SAFE or INJECTION | Classifier returns "INJECTION" |
-
-If any layer flags the input, `run_agent` returns a block message instead of proceeding to normal processing.
 
 ---
 
@@ -123,10 +121,3 @@ guardrail-chatbot/
 └── README.md
 ```
 
-## 🧪 Known Limitations / TODO
-
-- Hardcoded credentials in `App.py` and `splunk_logger.py` need to move to environment variables.
-- `run_agent` currently only reports whether input was blocked — it doesn't yet call a downstream LLM agent when input is deemed safe.
-- Vector similarity threshold (`0.3`) and rule-based regex patterns are a starting point and should be tuned against real traffic.
-- Splunk logging is disabled by default (commented out).
-- No adversarial test suite yet.
