@@ -19,9 +19,6 @@ This project screens incoming user input through three independent detection lay
 
   <g style="font-family:'Anthropic Sans', -apple-system, 'system-ui', 'Segoe UI', sans-serif;">
 
-  <!-- Title -->
-  <text x="500" y="28" text-anchor="middle" style="fill:rgb(41,41,38);font-size:17px;font-weight:600;">Prompt Injection / Jailbreak Guardrail — Architecture</text>
-
   <!-- User Input -->
   <rect x="420" y="52" width="160" height="44" rx="8" stroke-width="0.5" style="fill:rgb(241,239,232);stroke:rgb(95,94,90);"/>
   <text x="500" y="74" text-anchor="middle" dominant-baseline="central" style="fill:rgb(68,68,65);font-size:14px;font-weight:500;">User input</text>
