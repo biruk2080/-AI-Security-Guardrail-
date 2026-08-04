@@ -1,13 +1,13 @@
 
 🛡️ Prompt Injection / Jailbreak Guardrail
-<svg width="100%" viewBox="0 0 1000 780" xmlns="http://www.w3.org/2000/svg">
+
 An **AI input-safety layer** built with **LangChain**, **Chroma**, and **GPT-4o-mini**, featuring a **three-layer detection pipeline** and a simple **Gradio** interface. Every user message is screened for prompt injection and jailbreak attempts before it's allowed to reach a downstream LLM agent.
 
 ## 🚀 Overview
 
 This project screens incoming user input through three independent detection layers regex, vector semantic search with RAG, and an LLM classifier before deciding whether to allow or block a request. The regex identify the fraud phrase from the prompt and block earlier before even pass to the second layer. The second layer run semantic search prompt against the business specific prompt injection/ jailbreak attempt vectore database and detect based on similarity score. The 3rd layer is LLM classifyer which use LLM model as identifyer and classify prompt as Jailbreak or prompt injection. Each layer runs in order and short-circuits as soon as one flags the input as unsafe. If any layer flags the input, returns a block message instead of proceeding to normal processing. Fianlly, all proces send to Splunk in each step for monitoring.
-
-
+<img width="192" height="150" alt="architecture" src="https://github.com/user-attachments/assets/194688ad-b160-4910-8fbe-ee9cef9d1453" />
+<svg width="100%" viewBox="0 0 1000 780" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
       <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -105,6 +105,9 @@ This project screens incoming user input through three independent detection lay
 
   </g>
 </svg>
+
+
+ 
 ## ✨ Features
 
 - 🛡️ **Three-layer security guardrail** — regex, vector similarity, and LLM-based injection detection running in sequence on every input
